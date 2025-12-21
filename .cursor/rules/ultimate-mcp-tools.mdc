@@ -34,9 +34,18 @@ ultimate_run_program:
 ultimate_run_prg_binary:
   - prg_data_base64: "AQgLCJ4A..."  # Base64-encoded PRG
   - url: "https://example.com/demo.prg"  # OR download from URL
-  - file_path: "/local/path/demo.prg"  # OR local server file
+  - file_path: "/local/path/demo.prg"  # OR local server file (path on the SERVER filesystem)
   
   Use ONE of the above parameters, not multiple.
+```
+
+### Direct Upload (Recommended for Local Files)
+If you have a PRG file on your local machine and want to run it via the MCP server (bypassing MCP protocol limits or path issues):
+
+```bash
+curl -X POST <mcp-server-url>/upload-prg \
+  -H "Content-Type: application/octet-stream" \
+  --data-binary @path/to/demo.prg
 ```
 
 ### PRG File Format
