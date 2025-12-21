@@ -313,8 +313,8 @@ docker build -t ultimate64-mcp .
 # With environment variable
 docker run -p 8000:8000 -e C64_HOST=192.168.1.64 ultimate64-mcp
 
-# With custom port on Ultimate device
-docker run -p 8000:8000 -e C64_HOST=http://192.168.1.64:6464 ultimate64-mcp
+# With custom port to Ultimate device (in case C64 is behind NAT/port fowards)
+docker run -p 8000:8000 -e C64_HOST=http://192.168.1.64:6464 ultimate64-mcp 
 
 # Start without connection (configure later via tool)
 docker run -p 8000:8000 ultimate64-mcp
@@ -324,7 +324,7 @@ docker run -p 8000:8000 ultimate64-mcp
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `C64_HOST` | IP address or URL of your Ultimate device | `192.168.1.64` or `http://192.168.1.64:6464` |
+| `C64_HOST` | IP address or URL of your Ultimate device | `192.168.1.64` or `http://myC64.domain.com:6464` |
 
 ---
 
