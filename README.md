@@ -538,7 +538,7 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ## 🙏 Acknowledgments
 
-- **Commodore** — For bringing back the Commodore 64 with the official Commodore 64 Ultimate
+- **[Commodore] (https://www.commodore.net)** — For bringing back the Commodore 64 with the official Commodore 64 Ultimate, particular Christian Simpson aka PeriFractic
 - **[Gideon Zweijtzer](https://github.com/GideonZ) / [Gideon's Logic](https://ultimate64.com/)** — Creator of the Ultimate 64 mainboard, Ultimate II+, and the entire 1541 Ultimate project. His incredible FPGA engineering powers the Commodore 64 Ultimate and has given the C64 community hardware that bridges vintage computing with modern convenience.
 - **[Anthropic](https://anthropic.com/)** — For the Model Context Protocol specification
 - **The Commodore 64 community** — Keeping the platform alive since 1982
@@ -551,6 +551,7 @@ MIT License — see [LICENSE](LICENSE) for details.
 - [1541 Ultimate Project on GitHub](https://github.com/GideonZ/1541ultimate)
 - [Ultimate REST API Documentation](https://github.com/GideonZ/1541ultimate/wiki/Ultimate-REST-API)
 - [Model Context Protocol Specification](https://modelcontextprotocol.io/)
+- [Commodore International Corporation](https://www.commodore.net)
 
 ---
 
