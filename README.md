@@ -31,7 +31,6 @@ This server also works with other products from [Gideon's Logic](https://ultimat
 |--------|-------------|
 | **[Ultimate 64](https://ultimate64.com/Ultimate-64)** | The original FPGA-based Commodore 64 mainboard by Gideon's Logic. |
 | **[Ultimate II+](https://ultimate64.com/Ultimate-II)** | A cartridge for your original Commodore 64 or C128, adding USB storage, ethernet, drive emulation, and more. |
-| **[Ultimate II+L](https://ultimate64.com/)** | A lighter version of the Ultimate II+ with essential features. |
 
 All Ultimate devices expose the same REST API that this MCP server uses.
 
