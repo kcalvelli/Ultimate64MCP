@@ -30,7 +30,16 @@
             anyio
             httpx
             httpx-sse
+            jsonschema
             pydantic
+            pydantic-settings
+            pyjwt
+            python-multipart
+            sse-starlette
+            starlette
+            typing-extensions
+            typing-inspection
+            uvicorn
           ];
 
           # Skip tests as they may require network access
@@ -78,6 +87,7 @@
               ps.sse-starlette
               ps.anyio
               ps.httpx-sse
+              ps.pydantic-settings
             ])}/bin/python3 $out/bin/mcp-ultimate \
               --add-flags "$out/lib/ultimate64-mcp/mcp_ultimate_server.py"
           '';
@@ -116,6 +126,7 @@
               ps.sse-starlette
               ps.anyio
               ps.httpx-sse
+              ps.pydantic-settings
               ps.python-lsp-server
             ]))
           ];
