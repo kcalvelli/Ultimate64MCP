@@ -13,20 +13,18 @@
 
         # Build the MCP Python SDK from PyPI
         # This package is not in nixpkgs yet, so we build it here
+        # Use wheel format to avoid build dependencies
         python-mcp = pkgs.python311Packages.buildPythonPackage rec {
           pname = "mcp";
           version = "1.25.0";
-          format = "pyproject";
+          format = "wheel";
 
           src = pkgs.python311Packages.fetchPypi {
-            inherit pname version;
-            hash = pkgs.lib.fakeHash;
+            inherit pname version format;
+            dist = "py3";
+            python = "py3";
+            hash = "sha256-s3w4FEpmat0IYmFMx57Cdul9cqqMom1iKBjU4ni5cho=";
           };
-
-          nativeBuildInputs = with pkgs.python311Packages; [
-            setuptools
-            wheel
-          ];
 
           propagatedBuildInputs = with pkgs.python311Packages; [
             anyio
