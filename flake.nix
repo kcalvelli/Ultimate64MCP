@@ -1,0 +1,133 @@
+{
+  description = "MCP server for Commodore 64 Ultimate control";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+
+        # Build the MCP Python SDK from PyPI
+        # This package is not in nixpkgs yet, so we build it here
+        python-mcp = pkgs.python311Packages.buildPythonPackage rec {
+          pname = "mcp";
+          version = "1.25.0";
+          format = "pyproject";
+
+          src = pkgs.python311Packages.fetchPypi {
+            inherit pname version;
+            hash = pkgs.lib.fakeHash;
+          };
+
+          nativeBuildInputs = with pkgs.python311Packages; [
+            setuptools
+            wheel
+          ];
+
+          propagatedBuildInputs = with pkgs.python311Packages; [
+            anyio
+            httpx
+            pydantic
+          ];
+
+          # Skip tests as they may require network access
+          doCheck = false;
+
+          meta = with pkgs.lib; {
+            description = "Python implementation of the Model Context Protocol (MCP)";
+            homepage = "https://github.com/modelcontextprotocol/python-sdk";
+            license = licenses.mit;
+          };
+        };
+
+        ultimate64-mcp = pkgs.python311Packages.buildPythonApplication {
+          pname = "ultimate64-mcp";
+          version = "1.0.0";
+
+          src = ./.;
+
+          format = "other";
+
+          propagatedBuildInputs = with pkgs.python311Packages; [
+            python-mcp
+            aiohttp
+            uvicorn
+            starlette
+            sse-starlette
+            anyio
+          ];
+
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+
+          buildPhase = ''
+            # No build needed for pure Python
+          '';
+
+          installPhase = ''
+            mkdir -p $out/bin $out/lib/ultimate64-mcp
+            cp mcp_ultimate_server.py $out/lib/ultimate64-mcp/
+
+            makeWrapper ${pkgs.python311.withPackages (ps: [
+              python-mcp
+              ps.aiohttp
+              ps.uvicorn
+              ps.starlette
+              ps.sse-starlette
+              ps.anyio
+            ])}/bin/python3 $out/bin/mcp-ultimate \
+              --add-flags "$out/lib/ultimate64-mcp/mcp_ultimate_server.py"
+          '';
+
+          doCheck = false;
+
+          meta = with pkgs.lib; {
+            description = "MCP server for Commodore 64 Ultimate control";
+            homepage = "https://github.com/Martijn-DevRev/Ultimate64MCP";
+            license = licenses.mit;
+            maintainers = [ ];
+            platforms = platforms.all;
+          };
+        };
+
+      in {
+        packages = {
+          default = ultimate64-mcp;
+          ultimate64-mcp = ultimate64-mcp;
+        };
+
+        apps = {
+          default = {
+            type = "app";
+            program = "${ultimate64-mcp}/bin/mcp-ultimate";
+          };
+        };
+
+        devShells.default = pkgs.mkShell {
+          buildInputs = [
+            (pkgs.python311.withPackages (ps: [
+              python-mcp
+              ps.aiohttp
+              ps.uvicorn
+              ps.starlette
+              ps.sse-starlette
+              ps.anyio
+              ps.python-lsp-server
+            ]))
+          ];
+
+          shellHook = ''
+            echo "Ultimate 64 MCP Server Development Environment"
+            echo "Python: $(python3 --version)"
+            echo ""
+            echo "Commands:"
+            echo "  python3 mcp_ultimate_server.py --help"
+            echo "  python3 mcp_ultimate_server.py --stdio"
+          '';
+        };
+      }
+    );
+}
