@@ -29,6 +29,7 @@
           propagatedBuildInputs = with pkgs.python311Packages; [
             anyio
             httpx
+            httpx-sse
             pydantic
           ];
 
@@ -76,6 +77,7 @@
               ps.starlette
               ps.sse-starlette
               ps.anyio
+              ps.httpx-sse
             ])}/bin/python3 $out/bin/mcp-ultimate \
               --add-flags "$out/lib/ultimate64-mcp/mcp_ultimate_server.py"
           '';
@@ -113,6 +115,7 @@
               ps.starlette
               ps.sse-starlette
               ps.anyio
+              ps.httpx-sse
               ps.python-lsp-server
             ]))
           ];
