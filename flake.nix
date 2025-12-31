@@ -11,22 +11,31 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
+        # Override pydantic-extra-types to skip tests (failing on 2025-12-31 due to date-sensitive test)
+        python311 = pkgs.python311.override {
+          packageOverrides = self: super: {
+            pydantic-extra-types = super.pydantic-extra-types.overridePythonAttrs (old: {
+              doCheck = false;
+            });
+          };
+        };
+
         # Build the MCP Python SDK from PyPI
         # This package is not in nixpkgs yet, so we build it here
         # Use wheel format to avoid build dependencies
-        python-mcp = pkgs.python311Packages.buildPythonPackage rec {
+        python-mcp = python311.pkgs.buildPythonPackage rec {
           pname = "mcp";
           version = "1.25.0";
           format = "wheel";
 
-          src = pkgs.python311Packages.fetchPypi {
+          src = python311.pkgs.fetchPypi {
             inherit pname version format;
             dist = "py3";
             python = "py3";
             hash = "sha256-s3w4FEpmat0IYmFMx57Cdul9cqqMom1iKBjU4ni5cho=";
           };
 
-          propagatedBuildInputs = with pkgs.python311Packages; [
+          propagatedBuildInputs = with python311.pkgs; [
             anyio
             httpx
             httpx-sse
@@ -52,7 +61,7 @@
           };
         };
 
-        ultimate64-mcp = pkgs.python311Packages.buildPythonApplication {
+        ultimate64-mcp = python311.pkgs.buildPythonApplication {
           pname = "ultimate64-mcp";
           version = "1.0.0";
 
@@ -60,7 +69,7 @@
 
           format = "other";
 
-          propagatedBuildInputs = with pkgs.python311Packages; [
+          propagatedBuildInputs = with python311.pkgs; [
             python-mcp
             aiohttp
             uvicorn
@@ -79,7 +88,7 @@
             mkdir -p $out/bin $out/lib/ultimate64-mcp
             cp mcp_ultimate_server.py $out/lib/ultimate64-mcp/
 
-            makeWrapper ${pkgs.python311.withPackages (ps: [
+            makeWrapper ${python311.withPackages (ps: [
               python-mcp
               ps.aiohttp
               ps.uvicorn
@@ -118,7 +127,7 @@
 
         devShells.default = pkgs.mkShell {
           buildInputs = [
-            (pkgs.python311.withPackages (ps: [
+            (python311.withPackages (ps: [
               python-mcp
               ps.aiohttp
               ps.uvicorn
