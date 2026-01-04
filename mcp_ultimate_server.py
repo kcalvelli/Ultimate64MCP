@@ -205,6 +205,55 @@ class UltimateHandler:
                 }
             ),
             Tool(
+                name="ultimate_play_sid_binary",
+                description="Upload and play a SID file. Accepts file path, base64-encoded binary data, or URL to download the SID file.",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "file_path": {
+                            "type": "string",
+                            "description": "Path to the SID file to upload and play (if file is on server filesystem)"
+                        },
+                        "sid_data_base64": {
+                            "type": "string",
+                            "description": "Base64-encoded SID file binary data"
+                        },
+                        "url": {
+                            "type": "string",
+                            "description": "URL to download the SID file from (HTTP/HTTPS)"
+                        },
+                        "song_number": {
+                            "type": "integer",
+                            "description": "Optional song number to play (default: first song)",
+                            "minimum": 1
+                        }
+                    },
+                    "required": []
+                }
+            ),
+            Tool(
+                name="ultimate_play_mod_binary",
+                description="Upload and play an Amiga MOD file. Accepts file path, base64-encoded binary data, or URL to download the MOD file.",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "file_path": {
+                            "type": "string",
+                            "description": "Path to the MOD file to upload and play (if file is on server filesystem)"
+                        },
+                        "mod_data_base64": {
+                            "type": "string",
+                            "description": "Base64-encoded MOD file binary data"
+                        },
+                        "url": {
+                            "type": "string",
+                            "description": "URL to download the MOD file from (HTTP/HTTPS)"
+                        }
+                    },
+                    "required": []
+                }
+            ),
+            Tool(
                 name="ultimate_load_program",
                 description="Load a program into C64 memory (does not run it)",
                 inputSchema={
@@ -230,6 +279,28 @@ class UltimateHandler:
                         }
                     },
                     "required": ["file"]
+                }
+            ),
+            Tool(
+                name="ultimate_load_program_binary",
+                description="Upload and load a program into C64 memory (does not run it). Accepts file path, base64-encoded binary data, or URL to download the PRG file.",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "file_path": {
+                            "type": "string",
+                            "description": "Path to the PRG file to upload and load (if file is on server filesystem)"
+                        },
+                        "prg_data_base64": {
+                            "type": "string",
+                            "description": "Base64-encoded PRG file binary data"
+                        },
+                        "url": {
+                            "type": "string",
+                            "description": "URL to download the PRG file from (HTTP/HTTPS)"
+                        }
+                    },
+                    "required": []
                 }
             ),
             Tool(
@@ -266,6 +337,28 @@ class UltimateHandler:
                         }
                     },
                     "required": ["file"]
+                }
+            ),
+            Tool(
+                name="ultimate_run_cartridge_binary",
+                description="Upload and run a cartridge file. Accepts file path, base64-encoded binary data, or URL to download the CRT file.",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "file_path": {
+                            "type": "string",
+                            "description": "Path to the CRT file to upload and run (if file is on server filesystem)"
+                        },
+                        "crt_data_base64": {
+                            "type": "string",
+                            "description": "Base64-encoded CRT file binary data"
+                        },
+                        "url": {
+                            "type": "string",
+                            "description": "URL to download the CRT file from (HTTP/HTTPS)"
+                        }
+                    },
+                    "required": []
                 }
             ),
             Tool(
@@ -332,6 +425,15 @@ class UltimateHandler:
                 }
             ),
             Tool(
+                name="ultimate_get_drives",
+                description="List all drives with mount information and status",
+                inputSchema={
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            ),
+            Tool(
                 name="ultimate_mount_disk",
                 description="Mount a disk image on a drive",
                 inputSchema={
@@ -345,6 +447,14 @@ class UltimateHandler:
                         "file": {
                             "type": "string",
                             "description": "Path to the disk image file"
+                        },
+                        "type": {
+                            "type": "string",
+                            "description": "Optional disk image type (e.g., 'd64', 'd71', 'd81')"
+                        },
+                        "mode": {
+                            "type": "string",
+                            "description": "Optional mount mode"
                         }
                     },
                     "required": ["drive", "file"]
@@ -383,6 +493,21 @@ class UltimateHandler:
             Tool(
                 name="ultimate_turn_drive_off",
                 description="Turn off a drive",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "drive": {
+                            "type": "string",
+                            "description": "Drive identifier (A, B, etc.)",
+                            "enum": ["A", "B", "C", "D"]
+                        }
+                    },
+                    "required": ["drive"]
+                }
+            ),
+            Tool(
+                name="ultimate_reset_drive",
+                description="Reset a specific drive",
                 inputSchema={
                     "type": "object",
                     "properties": {
@@ -547,6 +672,47 @@ class UltimateHandler:
                 }
             ),
             Tool(
+                name="ultimate_pause_machine",
+                description="Pause the C64 processor via DMA (freeze execution)",
+                inputSchema={
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            ),
+            Tool(
+                name="ultimate_resume_machine",
+                description="Resume the C64 processor from paused state",
+                inputSchema={
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            ),
+            Tool(
+                name="ultimate_read_debug_register",
+                description="Read debug register (U64 only)",
+                inputSchema={
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            ),
+            Tool(
+                name="ultimate_write_debug_register",
+                description="Write to debug register (U64 only)",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "description": "Value to write to debug register in hexadecimal format (e.g., 'FF', '00')"
+                        }
+                    },
+                    "required": ["value"]
+                }
+            ),
+            Tool(
                 name="ultimate_power_off",
                 description="Power off the Ultimate device (hardware power off)",
                 inputSchema={
@@ -628,6 +794,68 @@ class UltimateHandler:
                         }
                     },
                     "required": ["drive", "file"]
+                }
+            ),
+            Tool(
+                name="ultimate_load_drive_rom_binary",
+                description="Upload and load a custom ROM into a drive. Accepts file path, base64-encoded binary data, or URL to download the ROM file.",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "drive": {
+                            "type": "string",
+                            "description": "Drive identifier (A, B, etc.)",
+                            "enum": ["A", "B", "C", "D"]
+                        },
+                        "file_path": {
+                            "type": "string",
+                            "description": "Path to the ROM file to upload (if file is on server filesystem)"
+                        },
+                        "rom_data_base64": {
+                            "type": "string",
+                            "description": "Base64-encoded ROM file binary data"
+                        },
+                        "url": {
+                            "type": "string",
+                            "description": "URL to download the ROM file from (HTTP/HTTPS)"
+                        }
+                    },
+                    "required": ["drive"]
+                }
+            ),
+            Tool(
+                name="ultimate_mount_disk_binary",
+                description="Upload and mount a disk image on a drive. Accepts file path, base64-encoded binary data, or URL to download the disk image.",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "drive": {
+                            "type": "string",
+                            "description": "Drive identifier (A, B, etc.)",
+                            "enum": ["A", "B", "C", "D"]
+                        },
+                        "file_path": {
+                            "type": "string",
+                            "description": "Path to the disk image file to upload (if file is on server filesystem)"
+                        },
+                        "disk_data_base64": {
+                            "type": "string",
+                            "description": "Base64-encoded disk image binary data"
+                        },
+                        "url": {
+                            "type": "string",
+                            "description": "URL to download the disk image from (HTTP/HTTPS)"
+                        },
+                        "type": {
+                            "type": "string",
+                            "description": "Optional disk image type (e.g., 'd64', 'd71', 'd81')"
+                        },
+                        "mode": {
+                            "type": "string",
+                            "description": "Optional mount mode"
+                        }
+                    },
+                    "required": ["drive"]
                 }
             ),
             Tool(
@@ -785,7 +1013,143 @@ class UltimateHandler:
             elif tool_name == "ultimate_play_mod":
                 file_path = arguments["file"]
                 result = await self.make_request("PUT", "runners:modplay", params={"file": file_path})
-                
+
+            elif tool_name == "ultimate_play_sid_binary":
+                # Handle binary SID file upload (similar to run_prg_binary)
+                sid_data = None
+                source_info = ""
+                song_number = arguments.get("song_number")
+
+                try:
+                    import os
+
+                    # Priority 1: base64 data
+                    if "sid_data_base64" in arguments and arguments["sid_data_base64"]:
+                        base64_str = arguments["sid_data_base64"].strip()
+                        try:
+                            sid_data = base64.b64decode(base64_str, validate=True)
+                            source_info = f"base64 data ({len(sid_data)} bytes)"
+                        except binascii.Error as e:
+                            result = {"errors": [f"Invalid base64 data: {str(e)}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Priority 2: URL download
+                    elif "url" in arguments and arguments["url"]:
+                        download_url = arguments["url"]
+                        try:
+                            async with aiohttp.ClientSession() as session:
+                                async with session.get(download_url, timeout=aiohttp.ClientTimeout(total=60)) as response:
+                                    if response.status == 200:
+                                        sid_data = await response.read()
+                                        source_info = f"URL {download_url} ({len(sid_data)} bytes)"
+                                    else:
+                                        result = {"errors": [f"Failed to download SID file: HTTP {response.status}"]}
+                                        return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+                        except Exception as e:
+                            result = {"errors": [f"Error downloading SID file: {str(e)}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Priority 3: file path
+                    elif "file_path" in arguments and arguments["file_path"]:
+                        file_path = arguments["file_path"]
+                        if os.path.exists(file_path):
+                            with open(file_path, 'rb') as f:
+                                sid_data = f.read()
+                            source_info = f"file {file_path} ({len(sid_data)} bytes)"
+                        else:
+                            result = {"errors": [f"File not found: {file_path}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+                    else:
+                        result = {"errors": ["One of 'file_path', 'sid_data_base64', or 'url' must be provided"]}
+                        return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Upload and play
+                    url = f"{self.api_base}/runners:sidplay"
+                    params = {}
+                    if song_number:
+                        params["songnr"] = song_number
+                    async with aiohttp.ClientSession() as session:
+                        async with session.post(url, params=params, data=sid_data,
+                                              headers={'Content-Type': 'application/octet-stream'},
+                                              timeout=aiohttp.ClientTimeout(total=60)) as response:
+                            if response.status == 200:
+                                try:
+                                    response_data = await response.json()
+                                except:
+                                    response_data = {"message": "SID started"}
+                                result = {"success": True, "message": f"Playing SID from {source_info}", "response": response_data}
+                            else:
+                                body = await response.text()
+                                result = {"errors": [f"Failed to play SID: HTTP {response.status}: {body}"]}
+                except Exception as e:
+                    result = {"errors": [f"Failed to process SID file: {str(e)}"]}
+
+            elif tool_name == "ultimate_play_mod_binary":
+                # Handle binary MOD file upload
+                mod_data = None
+                source_info = ""
+
+                try:
+                    import os
+
+                    # Priority 1: base64 data
+                    if "mod_data_base64" in arguments and arguments["mod_data_base64"]:
+                        base64_str = arguments["mod_data_base64"].strip()
+                        try:
+                            mod_data = base64.b64decode(base64_str, validate=True)
+                            source_info = f"base64 data ({len(mod_data)} bytes)"
+                        except binascii.Error as e:
+                            result = {"errors": [f"Invalid base64 data: {str(e)}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Priority 2: URL download
+                    elif "url" in arguments and arguments["url"]:
+                        download_url = arguments["url"]
+                        try:
+                            async with aiohttp.ClientSession() as session:
+                                async with session.get(download_url, timeout=aiohttp.ClientTimeout(total=60)) as response:
+                                    if response.status == 200:
+                                        mod_data = await response.read()
+                                        source_info = f"URL {download_url} ({len(mod_data)} bytes)"
+                                    else:
+                                        result = {"errors": [f"Failed to download MOD file: HTTP {response.status}"]}
+                                        return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+                        except Exception as e:
+                            result = {"errors": [f"Error downloading MOD file: {str(e)}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Priority 3: file path
+                    elif "file_path" in arguments and arguments["file_path"]:
+                        file_path = arguments["file_path"]
+                        if os.path.exists(file_path):
+                            with open(file_path, 'rb') as f:
+                                mod_data = f.read()
+                            source_info = f"file {file_path} ({len(mod_data)} bytes)"
+                        else:
+                            result = {"errors": [f"File not found: {file_path}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+                    else:
+                        result = {"errors": ["One of 'file_path', 'mod_data_base64', or 'url' must be provided"]}
+                        return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Upload and play
+                    url = f"{self.api_base}/runners:modplay"
+                    async with aiohttp.ClientSession() as session:
+                        async with session.post(url, data=mod_data,
+                                              headers={'Content-Type': 'application/octet-stream'},
+                                              timeout=aiohttp.ClientTimeout(total=60)) as response:
+                            if response.status == 200:
+                                try:
+                                    response_data = await response.json()
+                                except:
+                                    response_data = {"message": "MOD started"}
+                                result = {"success": True, "message": f"Playing MOD from {source_info}", "response": response_data}
+                            else:
+                                body = await response.text()
+                                result = {"errors": [f"Failed to play MOD: HTTP {response.status}: {body}"]}
+                except Exception as e:
+                    result = {"errors": [f"Failed to process MOD file: {str(e)}"]}
+
             elif tool_name == "ultimate_load_program":
                 file_path = arguments["file"]
                 result = await self.make_request("PUT", "runners:load_prg", params={"file": file_path})
@@ -793,7 +1157,73 @@ class UltimateHandler:
             elif tool_name == "ultimate_run_program":
                 file_path = arguments["file"]
                 result = await self.make_request("PUT", "runners:run_prg", params={"file": file_path})
-                
+
+            elif tool_name == "ultimate_load_program_binary":
+                # Handle binary PRG file upload for load (not run)
+                prg_data = None
+                source_info = ""
+
+                try:
+                    import os
+
+                    # Priority 1: base64 data
+                    if "prg_data_base64" in arguments and arguments["prg_data_base64"]:
+                        base64_str = arguments["prg_data_base64"].strip()
+                        try:
+                            prg_data = base64.b64decode(base64_str, validate=True)
+                            source_info = f"base64 data ({len(prg_data)} bytes)"
+                        except binascii.Error as e:
+                            result = {"errors": [f"Invalid base64 data: {str(e)}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Priority 2: URL download
+                    elif "url" in arguments and arguments["url"]:
+                        download_url = arguments["url"]
+                        try:
+                            async with aiohttp.ClientSession() as session:
+                                async with session.get(download_url, timeout=aiohttp.ClientTimeout(total=60)) as response:
+                                    if response.status == 200:
+                                        prg_data = await response.read()
+                                        source_info = f"URL {download_url} ({len(prg_data)} bytes)"
+                                    else:
+                                        result = {"errors": [f"Failed to download PRG file: HTTP {response.status}"]}
+                                        return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+                        except Exception as e:
+                            result = {"errors": [f"Error downloading PRG file: {str(e)}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Priority 3: file path
+                    elif "file_path" in arguments and arguments["file_path"]:
+                        file_path = arguments["file_path"]
+                        if os.path.exists(file_path):
+                            with open(file_path, 'rb') as f:
+                                prg_data = f.read()
+                            source_info = f"file {file_path} ({len(prg_data)} bytes)"
+                        else:
+                            result = {"errors": [f"File not found: {file_path}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+                    else:
+                        result = {"errors": ["One of 'file_path', 'prg_data_base64', or 'url' must be provided"]}
+                        return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Upload and load (not run)
+                    url = f"{self.api_base}/runners:load_prg"
+                    async with aiohttp.ClientSession() as session:
+                        async with session.post(url, data=prg_data,
+                                              headers={'Content-Type': 'application/octet-stream'},
+                                              timeout=aiohttp.ClientTimeout(total=60)) as response:
+                            if response.status == 200:
+                                try:
+                                    response_data = await response.json()
+                                except:
+                                    response_data = {"message": "Program loaded"}
+                                result = {"success": True, "message": f"Loaded PRG from {source_info}", "response": response_data}
+                            else:
+                                body = await response.text()
+                                result = {"errors": [f"Failed to load PRG: HTTP {response.status}: {body}"]}
+                except Exception as e:
+                    result = {"errors": [f"Failed to process PRG file: {str(e)}"]}
+
             elif tool_name == "ultimate_run_prg_binary":
                 prg_data = None
                 source_info = ""
@@ -942,7 +1372,73 @@ class UltimateHandler:
             elif tool_name == "ultimate_run_cartridge":
                 file_path = arguments["file"]
                 result = await self.make_request("PUT", "runners:run_crt", params={"file": file_path})
-                
+
+            elif tool_name == "ultimate_run_cartridge_binary":
+                # Handle binary CRT file upload
+                crt_data = None
+                source_info = ""
+
+                try:
+                    import os
+
+                    # Priority 1: base64 data
+                    if "crt_data_base64" in arguments and arguments["crt_data_base64"]:
+                        base64_str = arguments["crt_data_base64"].strip()
+                        try:
+                            crt_data = base64.b64decode(base64_str, validate=True)
+                            source_info = f"base64 data ({len(crt_data)} bytes)"
+                        except binascii.Error as e:
+                            result = {"errors": [f"Invalid base64 data: {str(e)}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Priority 2: URL download
+                    elif "url" in arguments and arguments["url"]:
+                        download_url = arguments["url"]
+                        try:
+                            async with aiohttp.ClientSession() as session:
+                                async with session.get(download_url, timeout=aiohttp.ClientTimeout(total=60)) as response:
+                                    if response.status == 200:
+                                        crt_data = await response.read()
+                                        source_info = f"URL {download_url} ({len(crt_data)} bytes)"
+                                    else:
+                                        result = {"errors": [f"Failed to download CRT file: HTTP {response.status}"]}
+                                        return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+                        except Exception as e:
+                            result = {"errors": [f"Error downloading CRT file: {str(e)}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Priority 3: file path
+                    elif "file_path" in arguments and arguments["file_path"]:
+                        file_path = arguments["file_path"]
+                        if os.path.exists(file_path):
+                            with open(file_path, 'rb') as f:
+                                crt_data = f.read()
+                            source_info = f"file {file_path} ({len(crt_data)} bytes)"
+                        else:
+                            result = {"errors": [f"File not found: {file_path}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+                    else:
+                        result = {"errors": ["One of 'file_path', 'crt_data_base64', or 'url' must be provided"]}
+                        return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Upload and run cartridge
+                    url = f"{self.api_base}/runners:run_crt"
+                    async with aiohttp.ClientSession() as session:
+                        async with session.post(url, data=crt_data,
+                                              headers={'Content-Type': 'application/octet-stream'},
+                                              timeout=aiohttp.ClientTimeout(total=60)) as response:
+                            if response.status == 200:
+                                try:
+                                    response_data = await response.json()
+                                except:
+                                    response_data = {"message": "Cartridge started"}
+                                result = {"success": True, "message": f"Running cartridge from {source_info}", "response": response_data}
+                            else:
+                                body = await response.text()
+                                result = {"errors": [f"Failed to run cartridge: HTTP {response.status}: {body}"]}
+                except Exception as e:
+                    result = {"errors": [f"Failed to process CRT file: {str(e)}"]}
+
             elif tool_name == "ultimate_get_config_categories":
                 result = await self.make_request("GET", "configs")
                 
@@ -960,11 +1456,19 @@ class UltimateHandler:
                 item = arguments["item"]
                 value = arguments["value"]
                 result = await self.make_request("PUT", f"configs/{category}/{item}", params={"value": value})
-                
+
+            elif tool_name == "ultimate_get_drives":
+                result = await self.make_request("GET", "drives")
+
             elif tool_name == "ultimate_mount_disk":
                 drive = arguments["drive"]
                 file_path = arguments["file"]
-                result = await self.make_request("PUT", f"drives/{drive}:mount", params={"image": file_path})
+                params = {"image": file_path}
+                if "type" in arguments:
+                    params["type"] = arguments["type"]
+                if "mode" in arguments:
+                    params["mode"] = arguments["mode"]
+                result = await self.make_request("PUT", f"drives/{drive}:mount", params=params)
                 
             elif tool_name == "ultimate_unmount_disk":
                 drive = arguments["drive"]
@@ -977,7 +1481,11 @@ class UltimateHandler:
             elif tool_name == "ultimate_turn_drive_off":
                 drive = arguments["drive"]
                 result = await self.make_request("PUT", f"drives/{drive}:off")
-                
+
+            elif tool_name == "ultimate_reset_drive":
+                drive = arguments["drive"]
+                result = await self.make_request("PUT", f"drives/{drive}:reset")
+
             elif tool_name == "ultimate_create_d64":
                 path = arguments["path"]
                 params = {}
@@ -1060,7 +1568,20 @@ class UltimateHandler:
                 
             elif tool_name == "ultimate_reset_machine":
                 result = await self.make_request("PUT", "machine:reset")
-                
+
+            elif tool_name == "ultimate_pause_machine":
+                result = await self.make_request("PUT", "machine:pause")
+
+            elif tool_name == "ultimate_resume_machine":
+                result = await self.make_request("PUT", "machine:resume")
+
+            elif tool_name == "ultimate_read_debug_register":
+                result = await self.make_request("GET", "machine:debugreg")
+
+            elif tool_name == "ultimate_write_debug_register":
+                value = arguments["value"]
+                result = await self.make_request("PUT", "machine:debugreg", params={"value": value})
+
             elif tool_name == "ultimate_power_off":
                 result = await self.make_request("PUT", "machine:poweroff")
                 
@@ -1085,7 +1606,147 @@ class UltimateHandler:
                 drive = arguments["drive"]
                 file_path = arguments["file"]
                 result = await self.make_request("PUT", f"drives/{drive}:load_rom", params={"file": file_path})
-                
+
+            elif tool_name == "ultimate_load_drive_rom_binary":
+                # Handle binary ROM file upload for drive
+                drive = arguments["drive"]
+                rom_data = None
+                source_info = ""
+
+                try:
+                    import os
+
+                    # Priority 1: base64 data
+                    if "rom_data_base64" in arguments and arguments["rom_data_base64"]:
+                        base64_str = arguments["rom_data_base64"].strip()
+                        try:
+                            rom_data = base64.b64decode(base64_str, validate=True)
+                            source_info = f"base64 data ({len(rom_data)} bytes)"
+                        except binascii.Error as e:
+                            result = {"errors": [f"Invalid base64 data: {str(e)}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Priority 2: URL download
+                    elif "url" in arguments and arguments["url"]:
+                        download_url = arguments["url"]
+                        try:
+                            async with aiohttp.ClientSession() as session:
+                                async with session.get(download_url, timeout=aiohttp.ClientTimeout(total=60)) as response:
+                                    if response.status == 200:
+                                        rom_data = await response.read()
+                                        source_info = f"URL {download_url} ({len(rom_data)} bytes)"
+                                    else:
+                                        result = {"errors": [f"Failed to download ROM file: HTTP {response.status}"]}
+                                        return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+                        except Exception as e:
+                            result = {"errors": [f"Error downloading ROM file: {str(e)}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Priority 3: file path
+                    elif "file_path" in arguments and arguments["file_path"]:
+                        file_path = arguments["file_path"]
+                        if os.path.exists(file_path):
+                            with open(file_path, 'rb') as f:
+                                rom_data = f.read()
+                            source_info = f"file {file_path} ({len(rom_data)} bytes)"
+                        else:
+                            result = {"errors": [f"File not found: {file_path}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+                    else:
+                        result = {"errors": ["One of 'file_path', 'rom_data_base64', or 'url' must be provided"]}
+                        return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Upload ROM to drive
+                    url = f"{self.api_base}/drives/{drive}:load_rom"
+                    async with aiohttp.ClientSession() as session:
+                        async with session.post(url, data=rom_data,
+                                              headers={'Content-Type': 'application/octet-stream'},
+                                              timeout=aiohttp.ClientTimeout(total=60)) as response:
+                            if response.status == 200:
+                                try:
+                                    response_data = await response.json()
+                                except:
+                                    response_data = {"message": "ROM loaded"}
+                                result = {"success": True, "message": f"Loaded ROM to drive {drive} from {source_info}", "response": response_data}
+                            else:
+                                body = await response.text()
+                                result = {"errors": [f"Failed to load ROM: HTTP {response.status}: {body}"]}
+                except Exception as e:
+                    result = {"errors": [f"Failed to process ROM file: {str(e)}"]}
+
+            elif tool_name == "ultimate_mount_disk_binary":
+                # Handle binary disk image upload and mount
+                drive = arguments["drive"]
+                disk_data = None
+                source_info = ""
+
+                try:
+                    import os
+
+                    # Priority 1: base64 data
+                    if "disk_data_base64" in arguments and arguments["disk_data_base64"]:
+                        base64_str = arguments["disk_data_base64"].strip()
+                        try:
+                            disk_data = base64.b64decode(base64_str, validate=True)
+                            source_info = f"base64 data ({len(disk_data)} bytes)"
+                        except binascii.Error as e:
+                            result = {"errors": [f"Invalid base64 data: {str(e)}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Priority 2: URL download
+                    elif "url" in arguments and arguments["url"]:
+                        download_url = arguments["url"]
+                        try:
+                            async with aiohttp.ClientSession() as session:
+                                async with session.get(download_url, timeout=aiohttp.ClientTimeout(total=60)) as response:
+                                    if response.status == 200:
+                                        disk_data = await response.read()
+                                        source_info = f"URL {download_url} ({len(disk_data)} bytes)"
+                                    else:
+                                        result = {"errors": [f"Failed to download disk image: HTTP {response.status}"]}
+                                        return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+                        except Exception as e:
+                            result = {"errors": [f"Error downloading disk image: {str(e)}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Priority 3: file path
+                    elif "file_path" in arguments and arguments["file_path"]:
+                        file_path = arguments["file_path"]
+                        if os.path.exists(file_path):
+                            with open(file_path, 'rb') as f:
+                                disk_data = f.read()
+                            source_info = f"file {file_path} ({len(disk_data)} bytes)"
+                        else:
+                            result = {"errors": [f"File not found: {file_path}"]}
+                            return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+                    else:
+                        result = {"errors": ["One of 'file_path', 'disk_data_base64', or 'url' must be provided"]}
+                        return CallToolResult(content=[TextContent(type="text", text=json.dumps(result, indent=2))])
+
+                    # Upload and mount disk
+                    url = f"{self.api_base}/drives/{drive}:mount"
+                    params = {}
+                    if "type" in arguments:
+                        params["type"] = arguments["type"]
+                    if "mode" in arguments:
+                        params["mode"] = arguments["mode"]
+
+                    async with aiohttp.ClientSession() as session:
+                        async with session.post(url, params=params, data=disk_data,
+                                              headers={'Content-Type': 'application/octet-stream'},
+                                              timeout=aiohttp.ClientTimeout(total=60)) as response:
+                            if response.status == 200:
+                                try:
+                                    response_data = await response.json()
+                                except:
+                                    response_data = {"message": "Disk mounted"}
+                                result = {"success": True, "message": f"Mounted disk on drive {drive} from {source_info}", "response": response_data}
+                            else:
+                                body = await response.text()
+                                result = {"errors": [f"Failed to mount disk: HTTP {response.status}: {body}"]}
+                except Exception as e:
+                    result = {"errors": [f"Failed to process disk image: {str(e)}"]}
+
             elif tool_name == "ultimate_get_file_info":
                 path = arguments["path"]
                 result = await self.make_request("GET", f"files/{path}:info")
